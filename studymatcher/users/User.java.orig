@@ -1,0 +1,217 @@
+package com.studymatcher.users;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+<<<<<<< HEAD:Backend/StudyMatcher_V2/src/main/java/main/java/com/studymatcher/users/User.java
+import javax.persistence.OneToOne;
+||||||| merged common ancestors
+import javax.persistence.Table;
+=======
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+>>>>>>> demo3:Backend/StudyMatcher_V2/src/main/java/com/studymatcher/users/User.java
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+<<<<<<< HEAD:Backend/StudyMatcher_V2/src/main/java/main/java/com/studymatcher/users/User.java
+import main.java.com.studymatcher.group.Group;
+import main.java.com.studymatcher.profile.Profile;
+
+//@Entity
+//@Table(name="user")
+//public class User {
+//	
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@Column(name = "id", updatable = false, nullable = false)
+//	private int id; 
+||||||| merged common ancestors
+import main.java.com.studymatcher.group.Group;
+=======
+import com.studymatcher.group.Group;
+import com.studymatcher.tasks.Task;
+>>>>>>> demo3:Backend/StudyMatcher_V2/src/main/java/com/studymatcher/users/User.java
+
+@Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User implements Serializable {
+	  private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id; 
+	private String username; 
+	private String firstname; 
+	private String lastname; 
+	private String school; 
+	private String profession; 
+	private String password; 
+	private String cpassword;
+	private String email; 
+	
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getFirstname() {
+		return firstname;
+	}
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+	public String getLastname() {
+		return lastname;
+	}
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+	public String getSchool() {
+		return school;
+	}
+	public void setSchool(String school) {
+		this.school = school;
+	}
+	public String getProfession() {
+		return profession;
+	}
+	public void setProfession(String profession) {
+		this.profession = profession;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getCpassword() {
+		return cpassword;
+	}
+	public void setCpassword(String cpassword) {
+		this.cpassword = cpassword;
+	} 
+	
+	/**
+	 * Describes the mapping between the user and the group 
+	 * FetchType.LAZY is necessary here to prevent Spring from infinitely fetching user and group
+	 * (circular reference). JSON ignore is also necessary to prevent infinitely 
+	 * serializing user and group. A DTO is used to return groups for a user (or user for a group) 
+	 */
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="group_user",
+			joinColumns = {@JoinColumn(name="user_id")},
+			inverseJoinColumns = {@JoinColumn(name = "group_id")})
+	private Set<Group> Groups = new HashSet<>();
+	
+	public Set<Group> getGroups(){
+		return Groups; 
+	}
+	
+	public void setGroups(Set<Group> Groups) {
+		this.Groups = Groups; 
+	}
+	
+	public Map<String, Object> toDTO(){
+		Map<String, Object> map = new HashMap<>(); 
+		map.put("id",  this.id); 
+		map.put("username",  this.username); 
+		return map; 
+	}
+	
+	
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="profile_id")
+    private Profile profile;
+	
+	public Map<String, Object>toProfileDTO(){
+		Map<String, Object>map = new HashMap<>();
+		map.put("id", this.id);
+		map.put("username", this.username);
+		map.put("firstname", this.firstname);
+		map.put("lastname", this.lastname);
+		map.put("school", this.school);
+		map.put("profession", this.profession);
+		return map; 
+	}
+<<<<<<< HEAD:Backend/StudyMatcher_V2/src/main/java/main/java/com/studymatcher/users/User.java
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public Profile getProfile() {
+		return profile;
+	}
+	public void setProfile(Profile profile) {
+		this.profile = profile;
+	}
+||||||| merged common ancestors
+=======
+	
+>>>>>>> demo3:Backend/StudyMatcher_V2/src/main/java/com/studymatcher/users/User.java
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+<<<<<<< HEAD:Backend/StudyMatcher_V2/src/main/java/main/java/com/studymatcher/users/User.java
+
+||||||| merged common ancestors
+=======
+	
+	
+//	/**
+//	 * Describes the mapping between the user and the task 
+//	 * FetchType.LAZY is necessary here to prevent Spring from infinitely fetching user and task
+//	 * (circular reference). JSON ignore is also necessary to prevent infinitely 
+//	 * serializing user and task. A DTO is used to return tasks for a user (or user for a task) 
+//	 */
+//	@JsonIgnore
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="user")
+//	@JoinTable(name="task_user",
+//			joinColumns = {@JoinColumn(name="user_id")},
+//			inverseJoinColumns = {@JoinColumn(name = "task_id")})
+	private Set<Task> Tasks = new HashSet<>();
+
+	public Set<Task> getTasks() {
+		return Tasks;
+	}
+	
+	public void setTasks(Set<Task> tasks) {
+		Tasks = tasks;
+	}
+	
+	
+//	public Map<String, Object>toTaskDTO(){
+//		Map<String, Object>map = new HashMap<>();
+//		map.put("id", this.id);
+//		map.put("username", this.username);
+//		return map; 
+//	}
+	
+	
+	
+>>>>>>> demo3:Backend/StudyMatcher_V2/src/main/java/com/studymatcher/users/User.java
+}
